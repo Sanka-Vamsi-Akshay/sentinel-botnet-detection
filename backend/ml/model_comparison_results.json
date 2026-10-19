@@ -1,0 +1,111 @@
+{
+  "evaluation_type": "GroupShuffleSplit by capture",
+  "training_rows": 381749,
+  "test_rows": 297184,
+  "train_captures": [
+    "capture20110811",
+    "capture20110812",
+    "capture20110815",
+    "capture20110815-2",
+    "capture20110815-3",
+    "capture20110816",
+    "capture20110816-2",
+    "capture20110816-3",
+    "capture20110819"
+  ],
+  "test_captures": [
+    "capture20110810",
+    "capture20110817",
+    "capture20110818-2"
+  ],
+  "models": [
+    {
+      "model": "Baseline Random Forest",
+      "accuracy": 0.9989467804457844,
+      "precision_botnet": 0.9987882253047571,
+      "recall_botnet": 0.9998761276653909,
+      "f1_botnet": 0.9993318804044579,
+      "confusion_matrix": [
+        [
+          62788,
+          284
+        ],
+        [
+          29,
+          234083
+        ]
+      ],
+      "classification_report": {
+        "normal": {
+          "precision": 0.9995383415317509,
+          "recall": 0.9954972095383054,
+          "f1-score": 0.9975136826887179,
+          "support": 63072.0
+        },
+        "botnet": {
+          "precision": 0.9987882253047571,
+          "recall": 0.9998761276653909,
+          "f1-score": 0.9993318804044579,
+          "support": 234112.0
+        },
+        "accuracy": 0.9989467804457844,
+        "macro avg": {
+          "precision": 0.999163283418254,
+          "recall": 0.9976866686018482,
+          "f1-score": 0.9984227815465878,
+          "support": 297184.0
+        },
+        "weighted avg": {
+          "precision": 0.9989474240862155,
+          "recall": 0.9989467804457844,
+          "f1-score": 0.998946000389628,
+          "support": 297184.0
+        }
+      }
+    },
+    {
+      "model": "Expanded Random Forest",
+      "accuracy": 0.9845011844513837,
+      "precision_botnet": 0.9920713195313974,
+      "recall_botnet": 0.9882235852925095,
+      "f1_botnet": 0.9901437143175068,
+      "confusion_matrix": [
+        [
+          61223,
+          1849
+        ],
+        [
+          2757,
+          231355
+        ]
+      ],
+      "classification_report": {
+        "normal": {
+          "precision": 0.9569084088777743,
+          "recall": 0.9706842973110097,
+          "f1-score": 0.9637471271605327,
+          "support": 63072.0
+        },
+        "botnet": {
+          "precision": 0.9920713195313974,
+          "recall": 0.9882235852925095,
+          "f1-score": 0.9901437143175068,
+          "support": 234112.0
+        },
+        "accuracy": 0.9845011844513837,
+        "macro avg": {
+          "precision": 0.9744898642045858,
+          "recall": 0.9794539413017596,
+          "f1-score": 0.9769454207390198,
+          "support": 297184.0
+        },
+        "weighted avg": {
+          "precision": 0.9846086193162268,
+          "recall": 0.9845011844513837,
+          "f1-score": 0.9845415098072886,
+          "support": 297184.0
+        }
+      }
+    }
+  ]
+}
