@@ -24,6 +24,7 @@ from sklearn.metrics import (
     confusion_matrix,
     classification_report,
 )
+import requests
 
 
 def init_database():
@@ -119,6 +120,46 @@ metadata = None
 password_hashing = PasswordHash.recommended()
 ACCESS_TOKEN_EXPIRE_MINUTES = 60
 security = HTTPBearer()
+
+def ensure_processed_dataset():
+    """Download the processed dataset if it is missing."""
+    if DATA_FILE.exists():
+        return
+
+    hf_token = os.getenv("HF_TOKEN")
+    if not hf_token:
+        raise RuntimeError(
+            "Processed dataset is missing and HF_TOKEN is not configured."
+        )
+
+    DATA_FILE.parent.mkdir(parents=True, exist_ok=True)
+
+    dataset_url = (
+        "https://huggingface.co/datasets/"
+        "VamsiAkshaySanka/sentinel-processed-flows/resolve/main/flows.csv"
+    )
+
+    response = requests.get(
+        dataset_url,
+        headers={"Authorization": f"Bearer {hf_token}"},
+        stream=True,
+        timeout=(20, 300),
+    )
+    response.raise_for_status()
+
+    temp_file = DATA_FILE.with_suffix(".csv.download")
+    try:
+        with open(temp_file, "wb") as output:
+            for chunk in response.iter_content(chunk_size=1024 * 1024):
+                if chunk:
+                    output.write(chunk)
+
+        temp_file.replace(DATA_FILE)
+    finally:
+        response.close()
+        if temp_file.exists():
+            temp_file.unlink()
+
 
 if MODEL_FILE.exists() and METADATA_FILE.exists():
     model = joblib.load(MODEL_FILE)
@@ -565,10 +606,13 @@ def model_evaluation():
         )
 
     if not DATA_FILE.exists():
-        raise HTTPException(
-            status_code=404,
-            detail="Processed dataset not found.",
-        )
+        try:
+            ensure_processed_dataset()
+        except Exception as exc:
+            raise HTTPException(
+                status_code=503,
+                detail=f"Could not download the processed dataset: {exc}",
+            ) from exc
 
     try:
         df = pd.read_csv(DATA_FILE, low_memory=False)
