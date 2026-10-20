@@ -615,30 +615,36 @@ def model_evaluation():
             ) from exc
 
     try:
-        df = pd.read_csv(DATA_FILE, low_memory=False)
-
         target = metadata["target_column"]
         capture_column = "capture"
-        features = metadata["feature_columns"]
         test_captures = metadata.get("test_captures", [])
-
-        if target not in df.columns or capture_column not in df.columns:
-            raise ValueError(
-                "Processed dataset must contain target_id and capture columns."
-            )
-
-        df = df[df[target].isin([0, 1])].copy()
-        df = df.dropna(subset=[capture_column])
-        df[target] = df[target].astype(int)
-        df[capture_column] = df[capture_column].astype(str)
 
         if not test_captures:
             raise ValueError("Test captures are missing from model metadata.")
 
-        test_df = df[df[capture_column].isin(test_captures)].copy()
+        test_capture_set = {str(capture) for capture in test_captures}
+        test_frames = []
 
-        if test_df.empty:
+        for chunk in pd.read_csv(DATA_FILE, low_memory=False, chunksize=10000):
+            if target not in chunk.columns or capture_column not in chunk.columns:
+                raise ValueError(
+                    "Processed dataset must contain target_id and capture columns."
+                )
+
+            chunk = chunk[chunk[target].isin([0, 1])]
+            chunk = chunk.dropna(subset=[capture_column]).copy()
+            chunk[target] = chunk[target].astype(int)
+            chunk[capture_column] = chunk[capture_column].astype(str)
+
+            selected = chunk[chunk[capture_column].isin(test_capture_set)]
+
+            if not selected.empty:
+                test_frames.append(selected)
+
+        if not test_frames:
             raise ValueError("No rows found for the saved test captures.")
+
+        test_df = pd.concat(test_frames, ignore_index=True)
 
         X_test = prepare_features(test_df)
         y_test = test_df[target]
