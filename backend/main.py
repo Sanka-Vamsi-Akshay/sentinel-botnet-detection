@@ -466,9 +466,10 @@ async def predict_batch(file: UploadFile = File(...), current_user: dict = Depen
     try:
         original_frame = pd.read_csv(BytesIO(contents))
     except Exception as exc:
+        print(f"CSV parsing failed: {exc}")
         raise HTTPException(
             status_code=400,
-            detail=f"Could not read CSV: {exc}",
+            detail="Could not read the uploaded CSV. Please check that it is a valid CSV file.",
         ) from exc
 
     if original_frame.empty:
@@ -484,9 +485,10 @@ async def predict_batch(file: UploadFile = File(...), current_user: dict = Depen
         probabilities = model.predict_proba(frame)
         classes = list(model.named_steps["classifier"].classes_)
     except Exception as exc:
+        print(f"Batch classification failed: {exc}")
         raise HTTPException(
             status_code=400,
-            detail=f"Could not classify CSV records: {exc}",
+            detail="Could not classify the uploaded CSV. Please check the input data and try again.",
         ) from exc
 
     results = []
