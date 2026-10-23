@@ -33,3 +33,10 @@ backups/
 
 # Generated model evaluation outputs
 backend/ml/model_comparison_results.csv
+
+
+# Local PostgreSQL migration testing
+backend/main_postgres_test.py
+backend/main_sqlite_backup.py
+check_neon.py
+test_flow.csv
