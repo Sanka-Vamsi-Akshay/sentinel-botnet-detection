@@ -343,7 +343,7 @@ def model_status():
 
     return {
         "loaded": True,
-        "model_type": "Random Forest",
+        "model_type": "Expanded Random Forest",
         "model_version": "expanded",
         "feature_count": len(metadata["feature_columns"]),
         "split_type": metadata.get("split_type"),
