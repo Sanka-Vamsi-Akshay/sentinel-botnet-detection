@@ -110,6 +110,7 @@ MODEL_FILE = MODEL_DIR / "random_forest_expanded.joblib"
 METADATA_FILE = MODEL_DIR / "model_metadata_expanded.joblib"
 
 MAX_UPLOAD_SIZE = 100 * 1024 * 1024
+MAX_UPLOAD_ROWS = 50_000
 
 model = None
 metadata = None
@@ -476,6 +477,12 @@ async def predict_batch(file: UploadFile = File(...), current_user: dict = Depen
         raise HTTPException(
             status_code=400,
             detail="The CSV contains no flow records.",
+        )
+
+    if len(original_frame) > MAX_UPLOAD_ROWS:
+        raise HTTPException(
+            status_code=413,
+            detail=f"CSV contains too many rows. Maximum allowed is {MAX_UPLOAD_ROWS:,}.",
         )
 
     frame = prepare_features(original_frame)
