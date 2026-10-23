@@ -580,7 +580,7 @@ export default function App() {
 										normal_count: data.counts.normal,
 										botnet_count: data.counts.botnet,
 										created_at: new Date().toISOString(),
-										model_name: data.model_name || "Random Forest",
+										model_name: data.model || "Expanded Random Forest",
 									},
 									...previous,
 								]);
