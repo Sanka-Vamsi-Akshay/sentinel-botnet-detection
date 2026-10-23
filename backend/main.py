@@ -558,8 +558,6 @@ async def predict_batch(file: UploadFile = File(...), current_user: dict = Depen
 
 
 @app.get("/api/prediction-history")
-
-@app.get("/api/prediction-history")
 async def get_prediction_history(
     current_user: dict = Depends(get_current_user),
 ):
