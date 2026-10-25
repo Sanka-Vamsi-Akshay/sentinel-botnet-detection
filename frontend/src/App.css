@@ -1597,3 +1597,35 @@ td {
         grid-template-columns: 1fr;
     }
 }
+
+.pagination-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border-color, #303744);
+  font-size: 12px;
+}
+
+.pagination-controls label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.pagination-controls select,
+.pagination-controls button {
+  padding: 7px 10px;
+  border: 1px solid var(--border-color, #303744);
+  border-radius: 7px;
+  background: var(--input-bg, #10141c);
+  color: inherit;
+}
+
+.pagination-controls button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}

@@ -24,6 +24,8 @@ export default function FlowInvestigation({ analysis, selectedRow: requestedRow 
     const [selectedRow, setSelectedRow] = useState(null);
     const [search, setSearch] = useState("");
     const [filter, setFilter] = useState("all");
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pageSize, setPageSize] = useState(50);
 
     const results = analysis?.results ?? [];
 
@@ -46,6 +48,24 @@ export default function FlowInvestigation({ analysis, selectedRow: requestedRow 
             return matchesFilter && matchesSearch;
         });
     }, [results, search, filter]);
+
+    const totalPages = Math.max(
+        1,
+        Math.ceil(filteredResults.length / pageSize)
+    );
+
+    const paginatedResults = useMemo(() => {
+        const start = (currentPage - 1) * pageSize;
+        return filteredResults.slice(start, start + pageSize);
+    }, [filteredResults, currentPage, pageSize]);
+
+    const startItem =
+        filteredResults.length === 0 ? 0 : (currentPage - 1) * pageSize + 1;
+
+    const endItem = Math.min(
+        currentPage * pageSize,
+        filteredResults.length
+    );
 
     const activeFlow =
         filteredResults.find((item) => item.row === selectedRow) ??
@@ -91,14 +111,20 @@ export default function FlowInvestigation({ analysis, selectedRow: requestedRow 
                     <div className="investigation-controls">
                         <input
                             value={search}
-                            onChange={(event) => setSearch(event.target.value)}
+                            onChange={(event) => {
+                                setSearch(event.target.value);
+                                setCurrentPage(1);
+                            }}
                             placeholder="Search row, prediction, IP, protocol..."
                             aria-label="Search flows"
                         />
 
                         <select
                             value={filter}
-                            onChange={(event) => setFilter(event.target.value)}
+                            onChange={(event) => {
+                                setFilter(event.target.value);
+                                setCurrentPage(1);
+                            }}
                             aria-label="Filter prediction"
                         >
                             <option value="all">All predictions</option>
@@ -108,7 +134,7 @@ export default function FlowInvestigation({ analysis, selectedRow: requestedRow 
                     </div>
 
                     <div className="flow-list">
-                        {filteredResults.map((item) => (
+                        {paginatedResults.map((item) => (
                             <button
                                 type="button"
                                 key={item.row}
@@ -142,6 +168,46 @@ export default function FlowInvestigation({ analysis, selectedRow: requestedRow 
                         {filteredResults.length === 0 && (
                             <p className="empty-state">No flows match these filters.</p>
                         )}
+                    </div>
+                    <div className="pagination-controls">
+                        <span>
+                            Showing {startItem}–{endItem} of {filteredResults.length} flows
+                        </span>
+
+                        <label>
+                            Rows per page:
+                            <select
+                                value={pageSize}
+                                onChange={(event) => {
+                                    setPageSize(Number(event.target.value));
+                                    setCurrentPage(1);
+                                }}
+                            >
+                                <option value={25}>25</option>
+                                <option value={50}>50</option>
+                                <option value={100}>100</option>
+                            </select>
+                        </label>
+
+                        <button
+                            type="button"
+                            disabled={currentPage <= 1}
+                            onClick={() => setCurrentPage((page) => page - 1)}
+                        >
+                            Previous
+                        </button>
+
+                        <span>
+                            Page {currentPage} of {totalPages}
+                        </span>
+
+                        <button
+                            type="button"
+                            disabled={currentPage >= totalPages}
+                            onClick={() => setCurrentPage((page) => page + 1)}
+                        >
+                            Next
+                        </button>
                     </div>
                 </section>
 
