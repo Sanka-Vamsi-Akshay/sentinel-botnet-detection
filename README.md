@@ -3,9 +3,6 @@
 **An ML-powered network security application for detecting botnet traffic using Random Forest classification.**
 
 🌐 **Live Demo:** [Try Sentinel](https://sentinel-botnet-detection.vercel.app/)
-<img width="1920" height="1080" alt="Screenshot 2026-10-25 145913" src="https://github.com/user-attachments/assets/5112401f-3b61-4aae-beda-2f1860d4fff0" />
-<img width="1920" height="1080" alt="Screenshot 2026-10-25 160741" src="https://github.com/user-attachments/assets/d54ca9c9-6bcb-40ad-a103-0617d24455f1" />
-
 
 ## 📌 About the Project
 
