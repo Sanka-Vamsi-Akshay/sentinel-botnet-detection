@@ -511,6 +511,17 @@ export default function App() {
 		loadModelStatus();
 	}, []);
 
+	// Lock background scrolling while the mobile drawer is open
+	useEffect(() => {
+		document.body.style.overflow = mobileOpen ? "hidden" : "";
+		return () => { document.body.style.overflow = ""; };
+	}, [mobileOpen]);
+
+	// Start each page at the top when navigating
+	useEffect(() => {
+		window.scrollTo(0, 0);
+	}, [page]);
+
 	useEffect(() => {
 		if (!accessToken) return;
 
