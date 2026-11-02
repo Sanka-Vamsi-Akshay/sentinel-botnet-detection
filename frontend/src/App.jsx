@@ -522,6 +522,14 @@ export default function App() {
 		window.scrollTo(0, 0);
 	}, [page]);
 
+	// Close the drawer when the screen becomes wide enough for the fixed sidebar
+	useEffect(() => {
+		const mq = window.matchMedia("(min-width: 1025px)");
+		const closeOnDesktop = (e) => { if (e.matches) setMobileOpen(false); };
+		mq.addEventListener("change", closeOnDesktop);
+		return () => mq.removeEventListener("change", closeOnDesktop);
+	}, []);
+
 	useEffect(() => {
 		if (!accessToken) return;
 

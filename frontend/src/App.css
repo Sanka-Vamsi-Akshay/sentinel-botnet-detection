@@ -1772,3 +1772,47 @@ td {
     display: none;
   }
 }
+
+/* =====================================================================
+   Sentinel responsive patch #2
+   Paste at the VERY END of App.css, AFTER the first responsive patch.
+   Additive only: no existing rule is edited. Delete the block to undo.
+   ===================================================================== */
+
+/* A. Page root uses the real mobile viewport height */
+#root {
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+/* B. Sticky top bar on phones/tablets so the menu button is always reachable
+      (z-index 10 stays below the overlay (15) and the sidebar (20)) */
+@media (max-width: 1024px) {
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+}
+
+/* C. Section headings with a button (e.g. "View all") wrap instead of squeezing */
+.panel-heading {
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* D. Safety net: one overly wide child can never create sideways page scroll.
+      "clip" (not "hidden") so sticky positioning keeps working. */
+.main-area {
+  min-width: 0;
+  overflow-x: clip;
+}
+
+/* E. OPTIONAL, large monitors: let content grow a bit on 1800px+ screens.
+      Uncomment if you want it.
+@media (min-width: 1800px) {
+  .page-content {
+    max-width: 1760px;
+  }
+}
+*/
